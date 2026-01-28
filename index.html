@@ -73,6 +73,7 @@
     <button id="Others" onclick="ShowOthers()">Others...</button>
     <button id="Passord" onclick="PasswordSet()"></button>
     <button id="StopSS"></button>
+    <button id="PasswordReset" onclick="localStorage.removeItem('passwordYes'); alert('Password removed!');"></button> 
     <!--THE PLACE FOR BUTTONS IS ABOVE ME!-->
     <div id="logDiv" style="position: relative; top: 0%;"></div> 
     <div class="backbackground" id="wall"></div>
@@ -271,8 +272,10 @@
            }
         });
         function ShowOthers() {
-            document.getElementById("Passord").innerHTML = "Change password..."
-            document.getElementById("StopSS").innelHTML = "Stop Snow" //SSStill making!! 
+            document.getElementById("Passord").innerHTML = "Change password...";
+            document.getElementById("PasswordReset").innerHTML = "Reset Password";
+            document.getElementById("StopSS").innerHTML = "Stop Snow"; //SSStill making!! 
+
         }
         function PasswordSet(){
             result = prompt("enter password that you want: ");
