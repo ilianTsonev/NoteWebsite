@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #4b4b4b;
+        }
+        .log-message {
+            color: white;
+        }
+        .backbackground {
+            background-color: #7f7f7f;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #userInput {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            position: absolute;
+            top: 50%;
+            left: 10%;
+        }
+        #flake0, [id^="flake"] {
+            user-select: none;
+            pointer-events: none;
+        }
+
+
+        #sendButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: absolute;
+            top: 50%;
+            left: 1%;
+        }
+
+        #sendButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>Better Than OneDrive</title>
+</head>
+<body>
+    <h1>Type Your Notes (Auto-Saving)</h1>
+    <textarea id="noteArea" rows="15" cols="50"></textarea><br>
+    <form id="ideaForm">
+        <textarea id="flockeIdea" rows="1" cols="50"></textarea>
+    </form>
+    <button onclick="sendIdea()">Send an Idea into the snow</button> <br>
+    <p>Auto-saving every second... because Microsoft can't.</p>
+    <button id="downloadButton">Download Notes</button>
+    <input id="LoadSave" type="file"/> <br>
+    <button onclick="saveNotReally()">Save Notes</button>
+    <input type="color" id="favcolor" name="favcolor" value="#7f7f7f">
+    <button onclick="notgood()">AutoSave on/off</button> <br>
+    <button onclick="BACKUP()">backup</button>
+    <button onclick="RESTORE()">restore</button>
+    <div id="logDiv" style="position: relative; top: 0%;"></div> 
+    <div class="backbackground" id="wall"></div>
+    <input type="text" id="userInput" placeholder="Type shi" />
+    <button id="sendButton">Send</button>
+
+    <script>
+        const noteArea = document.getElementById("noteArea");
+        const downloadButton = document.getElementById("downloadButton");
+        let saving = true; 
+        let seconds = 1; 
+        let counter = 1; 
+        const predefinedsaltedpassword = "password"; // very secure password
+
+        // Log messages to a div
+        function logToDiv(message) {
+            const logDiv = document.getElementById("logDiv");
+            if (logDiv) {
+                const logEntry = document.createElement("div");
+                logEntry.classList.add("log-message");
+                logEntry.textContent = message;
+                logDiv.appendChild(logEntry);
+            }
+        }
+
+        document.getElementById("LoadSave").addEventListener("change", function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var textArea = document.getElementById("noteArea");
+
+                // Backup current notes before replacing
+                localStorage.setItem("backup_notes", textArea.value);
+
+                if (confirm("Are you sure you want to replace your current notes?")) {
+                    textArea.value = e.target.result;
+                    localStorage.setItem("autosave", textArea.value);
+                } else {
+                    console.warn("File loading canceled.");
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // Load saved text
+        noteArea.value = localStorage.getItem("autosave") || "";
+        let snowflakeint = 50
+        // Auto-save every second
+        setInterval(() => {
+            if(saving){
+                localStorage.setItem("autosave", noteArea.value);
+                logToDiv(`Auto-saved! Your file has been saved ${counter} ${counter === 1 ? 'time' : 'times'}.`);
+                seconds++;
+                counter++;
+                snowflakeint++;
+                schnee.flockenanzahl = snowflakeint; // Increase snowflakes
+                if (seconds >= 20) {
+                    const logDiv = document.getElementById("logDiv");
+                    if (logDiv) {
+                        logDiv.remove();
+                    }
+
+                    const newLogDiv = document.createElement("div");
+                    newLogDiv.id = "logDiv";
+                    newLogDiv.style.position = "relative";
+                    newLogDiv.style.top = "0%";
+                    document.body.appendChild(newLogDiv);   
+
+                    seconds = 1;
+                }
+            } else {
+                logToDiv("Auto-save is off.");
+                seconds++;
+                if (seconds >= 20) {
+                    const logDiv = document.getElementById("logDiv");
+                    if (logDiv) {
+                        logDiv.remove();
+                    }
+
+                    const newLogDiv = document.createElement("div");
+                    newLogDiv.id = "logDiv";
+                    newLogDiv.style.position = "relative";
+                    newLogDiv.style.top = "0%";
+                    document.body.appendChild(newLogDiv);   
+
+                    seconds = 1;
+                }
+            }
+        }, 1000);
+
+        // Change background color
+        document.getElementById("favcolor").addEventListener("change", (event) => {
+            document.body.style.backgroundColor = event.target.value;
+        });
+
+        // Manual save action
+        window.addEventListener("beforeunload", () => {
+            localStorage.setItem("autosave", noteArea.value);
+        });
+
+        // Save notes function
+        function saveNotReally() {
+            console.warn("Sorry, This file is already saved every second.");
+        }
+
+        // Download notes
+        downloadButton.addEventListener("click", () => {
+            const textcontent = noteArea.value;
+            var downloadableLink = document.createElement('a');
+            downloadableLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(textcontent));
+            downloadableLink.download = "myFile" + ".txt";
+            document.body.appendChild(downloadableLink);
+            downloadableLink.click();
+            document.body.removeChild(downloadableLink);
+            console.info("Everything is running smoothly.");
+        });
+
+        // Toggle auto-save
+        function notgood() {
+            console.warn("Read LogDiv!");
+            if (saving) {
+                saving = false;
+                logToDiv("Auto-save is OFF.");
+            } else {
+                saving = true;
+                logToDiv("Auto-save is ON.");
+            }
+        }
+
+        // Handle user input
+        document.getElementById("sendButton").addEventListener("click", function() {
+            const input = document.getElementById("userInput").value;
+            if (input === predefinedsaltedpassword) {
+                document.getElementById("wall").remove();
+                document.getElementById("userInput").remove();
+                document.getElementById("sendButton").remove();
+            } else if (input) {
+                alert(`You sent: ${input}`);
+            } else {
+                alert("Please type something before sending!");
+            }
+
+            if (input == "exit") {
+                window.close();
+            } else if (input == "clear") {
+                noteArea.value = "";
+            } else if (input === "e") {
+                document.getElementById("wall").remove();
+                document.getElementById("userInput").remove();
+                document.getElementById("sendButton").remove();
+            }
+        });
+        function BACKUP() {
+            localStorage.setItem("backup_notes", noteArea.value);
+            logToDiv("Backup successful.");
+        }
+        function RESTORE() {
+            const backupNotes = localStorage.getItem("backup_notes");
+            if (backupNotes) {
+                if (confirm("Are you sure you want to restore your backup? This will overwrite current notes.")) {
+                    noteArea.value = backupNotes;
+                    logToDiv("Restore successful.");
+                } else {
+                    logToDiv("Restore canceled.");
+                }
+            } else {
+                logToDiv("No backup found.");
+            }
+        } //never program while listening to music. Your comments are gonna be only lyrics.
+        // i went up, i called G, i said "You think we can still get that deal with Rock-A-Fella?"
+    </script>
+    <script>
+        const ideaBox = document.getElementById("flockeIdea");
+        const ideaForm = document.getElementById("ideaForm");
+
+        // prevent reload
+        ideaForm.addEventListener("submit", e => {
+            e.preventDefault();
+            sendIdea();
+        });
+
+        // Enter-to-send, Shift+Enter newline
+        ideaBox.addEventListener("keydown", e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendIdea();
+           }
+        });
+    </script>
+
+    <script> //Stolen from Counter Strike Source fan website from the 2000s. Edited by me...
+        var idea
+        function sendIdea() { //completely new by me
+            const ideaInput = document.getElementById("flockeIdea");
+            const ideaValue = ideaInput.value;
+
+            if (ideaValue.trim() !== "") {
+                // Set the global snowflake character to your idea
+                schnee.flocke = ideaValue;
+        
+                // Push a new flake immediately so the user sees it "sent"
+                schnee.createFlake(schnee.flocken.length);
+        
+                // Clear the textarea after sending
+                ideaInput.value = "";
+        
+                logToDiv("Idea sent into the snow!");
+            }
+        }
+        // Update your snowflake interval to handle the "reset" to stars
+        
+        var schnee={ //wrote by german. 
+          flockenanzahl:snowflakeint,  //this should've add more snowflakes the more it goes, right? 
+          flockenfarbe:["#AAAACC","#CCCCDD","#DDDDFF","#F3F3F3","#F0FFFF","#FFFFFF"],
+          flockenschriftart:["Arial","Arial Narrow","Comic Sans MS","Gill Sans","Tahoma","Times","Verdana"],
+          flocke:"*",
+          geschwindigkeit:.3,
+          kleinsteflocke:10,
+          groessteflocke:25,
+          bewegung:30,
+          zindex:2e4,
+          flocken:[],
+          bodywidth:0,
+          bodyheight:0,
+          range:null,
+          count:0,
+          timeout:20,
+          lastinterval:0,
+          eventhandleresize:window.onresize,
+          eventhandleload:window.onload,
+          
+          start:function(){
+            if(this.eventhandleload!=null)this.eventhandleload();
+            this.range=this.groessteflocke-this.kleinsteflocke;
+            this.windowSize();
+            while(this.flockenanzahl>this.flocken.length)this.createFlake(this.flocken.length);
+            this.lastinterval=this.time();
+            window.setInterval(function(){schnee.movin()},this.timeout);
+          },
+        
+          time:function(){
+            return +(new Date);
+          },
+        
+        random:function(e){
+            return Math.floor(Math.random()*e);
+        },
+            // Increase snowflakes
+            createFlake:function(e){
+            var t=document.getElementsByTagName("body")[0];
+            var n=document.createElement("div");
+            n.id="flake"+e;
+            n.style.position="absolute";
+            n.style.left="0px";
+            n.style.top="-"+this.groessteflocke+"px";
+            n.style.color=this.flockenfarbe[this.random(this.flockenfarbe.length)];
+            n.style.fontFamily=this.flockenschriftart[this.random(this.flockenschriftart.length)];
+            n.style.fontSize=this.random(this.range)+this.kleinsteflocke+"px";
+            n.style.zIndex=this.zindex;
+            n.innerHTML=this.flocke;
+            t.appendChild(n);
+            this.flocken[e]={
+                x:this.random(this.bodywidth-this.bewegung-this.groessteflocke-3)+this.bewegung+1,
+                y:-this.groessteflocke-this.random(this.bodyheight),
+                size:this.random(this.range)+this.kleinsteflocke,
+                count:this.random(1e4)
+            };
+        },
+        
+        restartFlake:function(e){
+            this.flocken[e]={
+                x:this.random(this.bodywidth-this.bewegung-this.groessteflocke-3)+this.bewegung+1,
+                y:-this.groessteflocke,
+                size:this.random(this.range)+this.kleinsteflocke,
+                count:this.random(1e4)
+            };
+        },
+        
+        movin:function(){
+            var e=this.time()-this.lastinterval;
+            this.lastinterval=this.time();
+            var t=e*this.geschwindigkeit;
+            this.count+=t/800;
+            for(var n=0;n<this.flocken.length;n++){
+                var r=this.flocken[n];
+                r.y+=t*this.geschwindigkeit*this.groessteflocke/r.size;
+                if(r.y+r.size>=this.bodyheight){
+                    this.restartFlake(n);
+                    continue;
+                }
+                var i=document.getElementById("flake"+n);
+                i.style.left=Math.floor(r.x+Math.sin(r.count+this.count)*this.bewegung)+"px";
+                i.style.top=Math.floor(r.y)+"px";
+            }
+        },
+        
+        windowSize:function(){
+            var e=this.bodywidth;
+            this.bodywidth=this.getWindowWidth()-this.groessteflocke;
+            this.bodyheight=this.getWindowHeight()-this.groessteflocke;
+            var t=this.bodywidth/e;
+            for(var n=0;n<this.flocken.length;n++){
+                var r=this.flocken[n];
+                r.x*=t;
+                if(r.y+r.size>=this.bodyheight)this.restartFlake(n);
+            }
+        },
+        
+        getWindowWidth:function(){
+            var e=Math.max(self.innerWidth||0,window.innerWidth||0);
+            if(document.documentElement)e=Math.max(e,document.documentElement.clientWidth||0);
+            if(document.body){
+                e=Math.max(e,document.body.clientWidth||0);
+                e=Math.max(e,document.body.scrollWidth||0);
+                e=Math.max(e,document.body.offsetWidth||0);
+            }
+            return e;
+        },
+        
+        getWindowHeight:function(){
+            var e=Math.max(self.innerHeight||0,window.innerHeight||0);
+            if(document.documentElement)e=Math.max(e,document.documentElement.clientHeight||0);
+            if(document.body){
+                e=Math.max(e,document.body.clientHeight||0);
+                e=Math.max(e,document.body.scrollHeight||0);
+                e=Math.max(e,document.body.offsetHeight||0);
+            }
+            return e;
+        },
+        
+        resize:function(){
+            if(this.eventhandleresize!=null)this.eventhandleresize();
+            this.windowSize();
+        }
+        };
+        setInterval(() => {
+            snowflakeint++;
+
+            // Reset to default star after the idea has been used to create a flake
+            // This ensures only the 'sent' flake uses the text, and new auto-generated ones are stars
+            schnee.flocke = "*";
+
+            if (schnee.flocken.length < snowflakeint) {
+                schnee.createFlake(schnee.flocken.length);
+            }
+        }, 1000);
+
+
+        window.onresize=function(){schnee.resize()};
+        window.onload=function(){schnee.start()};
+        </script>
+        
+</body>
+</html>
