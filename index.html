@@ -67,7 +67,6 @@
     <input id="LoadSave" type="file"/> <br>
     <button onclick="saveNotReally()">Save Notes</button>
     <input type="color" id="favcolor" name="favcolor" value="#7f7f7f">
-    
     <button id="Others" onclick="ShowOthers()">Others...</button> <br>
     <button id="Passord" onclick="PasswordSet()"></button>
     <button id="StopSS"></button>
@@ -273,22 +272,22 @@
            }
         });
         function ShowOthers() {
-            pressed=true; //this function will only call when the button is pressed.
-            if (pressed){
-            document.getElementById("Passord").innerHTML = "Change password...";
-            document.getElementById("PasswordReset").innerHTML = "Reset Password";
-            document.getElementById("StopSS").innerHTML = "Stop Snow"; //SSStill making!! 
-            document.getElementById("saveonoff").innerHTML = "AutoSave on/off";
-            document.getElementById("backupe").innerHTML = "backup";
-            document.getElementById("restoree").innerHTML = "restore";
-            }else{
-            document.getElementById("Passord").innerHTML = "";
-            document.getElementById("PasswordReset").innerHTML = "";
-            document.getElementById("StopSS").innerHTML = "";
-            document.getElementById("saveonoff").innerHTML = "";
-            document.getElementById("backupe").innerHTML = "";
-            document.getElementById("restoree").innerHTML = "";
-            pressed=false;
+            if (pressed) {  // Check current state first
+                document.getElementById("Passord").innerHTML = "";
+                document.getElementById("PasswordReset").innerHTML = "";
+                document.getElementById("StopSS").innerHTML = "";
+                document.getElementById("saveonoff").innerHTML = "";
+                document.getElementById("backupe").innerHTML = "";
+                document.getElementById("restoree").innerHTML = "";
+                pressed = false;
+            } else {
+                document.getElementById("Passord").innerHTML = "Change password...";
+                document.getElementById("PasswordReset").innerHTML = "Reset Password";
+                document.getElementById("StopSS").innerHTML = "Stop Snow";
+                document.getElementById("saveonoff").innerHTML = "AutoSave on/off";
+                document.getElementById("backupe").innerHTML = "backup";
+                document.getElementById("restoree").innerHTML = "restore";
+                pressed = true;
             }
         }
         function PasswordSet(){
