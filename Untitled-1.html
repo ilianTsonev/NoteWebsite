@@ -74,8 +74,41 @@
     <div class="backbackground" id="wall"></div>
     <input type="text" id="userInput" placeholder="Type shi" />
     <button id="sendButton">Send</button>
+    <button id="Others" onclick="ShowOthers()">Others...</button>
+    <button id="Passord" onclick="PasswordSet()"></button>
+    <button id="StopSS"></button>
 
     <script>
+        if (localStorage.getItem("passwordYes") !==null) {
+            userpredefinedpassword = localStorage.getItem("passwordYes")
+            document.getElementById("sendButton").addEventListener("click", function() {
+            const input = document.getElementById("userInput").value;
+            if (input === predefinedsaltedpassword || userpredefinedpassword) {
+                document.getElementById("wall").remove();
+                document.getElementById("userInput").remove();
+                document.getElementById("sendButton").remove();
+            } else if (input) {
+                alert(`You sent: ${input}`);
+            } else {
+                alert("Please type something before sending!");
+            }
+
+            if (input == "exit") {
+                window.close();
+            } else if (input == "clear") {
+                noteArea.value = "";
+            } else if (input === "e") {
+                document.getElementById("wall").remove();
+                document.getElementById("userInput").remove();
+                document.getElementById("sendButton").remove();
+            }
+        });
+        }else {
+            document.getElementById("wall").remove();
+            document.getElementById("userInput").remove();
+            document.getElementById("sendButton").remove(); //remove these elements at start so users don't have them unless they want.
+        }
+        
         const noteArea = document.getElementById("noteArea");
         const downloadButton = document.getElementById("downloadButton");
         let saving = true; 
@@ -199,30 +232,7 @@
                 logToDiv("Auto-save is ON.");
             }
         }
-
-        // Handle user input
-        document.getElementById("sendButton").addEventListener("click", function() {
-            const input = document.getElementById("userInput").value;
-            if (input === predefinedsaltedpassword) {
-                document.getElementById("wall").remove();
-                document.getElementById("userInput").remove();
-                document.getElementById("sendButton").remove();
-            } else if (input) {
-                alert(`You sent: ${input}`);
-            } else {
-                alert("Please type something before sending!");
-            }
-
-            if (input == "exit") {
-                window.close();
-            } else if (input == "clear") {
-                noteArea.value = "";
-            } else if (input === "e") {
-                document.getElementById("wall").remove();
-                document.getElementById("userInput").remove();
-                document.getElementById("sendButton").remove();
-            }
-        });
+        
         function BACKUP() {
             localStorage.setItem("backup_notes", noteArea.value);
             logToDiv("Backup successful.");
@@ -259,6 +269,20 @@
                 sendIdea();
            }
         });
+        function ShowOthers() {
+            document.getElementById("Passord").innerHTML = "Change password..."
+            document.getElementById("StopSS").innelHTML = "Stop Snow" //SSStill making!! 
+        }
+        function PasswordSet(){
+            result = prompt("enter password that you want: ");
+            if (result === null) {
+                logToDiv("Password setup canceled.");
+                return;
+            }
+            
+            localStorage.setItem("passwordYes", result);
+            logToDiv("Password set!");
+        }
     </script>
 
     <script> //Stolen from Counter Strike Source fan website from the 2000s. Edited by me...
