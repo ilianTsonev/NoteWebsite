@@ -162,7 +162,7 @@
                 counter++;
                 snowflakeint++;
                 schnee.flockenanzahl = snowflakeint; // Increase snowflakes
-                if (seconds >= 20) {
+                if (seconds >= 5) {
                     const logDiv = document.getElementById("logDiv");
                     if (logDiv) {
                         logDiv.remove();
@@ -179,7 +179,7 @@
             } else {
                 logToDiv("Auto-save is off.");
                 seconds++;
-                if (seconds >= 10) {
+                if (seconds >= 5) {
                     const logDiv = document.getElementById("logDiv");
                     if (logDiv) {
                         logDiv.remove();
