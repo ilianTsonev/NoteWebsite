@@ -273,12 +273,23 @@
            }
         });
         function ShowOthers() {
+            pressed=true; //this function will only call when the button is pressed.
+            if (pressed){
             document.getElementById("Passord").innerHTML = "Change password...";
             document.getElementById("PasswordReset").innerHTML = "Reset Password";
             document.getElementById("StopSS").innerHTML = "Stop Snow"; //SSStill making!! 
             document.getElementById("saveonoff").innerHTML = "AutoSave on/off";
             document.getElementById("backupe").innerHTML = "backup";
             document.getElementById("restoree").innerHTML = "restore";
+            }else{
+            document.getElementById("Passord").innerHTML = "";
+            document.getElementById("PasswordReset").innerHTML = "";
+            document.getElementById("StopSS").innerHTML = "";
+            document.getElementById("saveonoff").innerHTML = "";
+            document.getElementById("backupe").innerHTML = "";
+            document.getElementById("restoree").innerHTML = "";
+            pressed=false;
+            }
         }
         function PasswordSet(){
             result = prompt("enter password that you want: ");
