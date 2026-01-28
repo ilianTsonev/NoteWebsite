@@ -67,13 +67,14 @@
     <input id="LoadSave" type="file"/> <br>
     <button onclick="saveNotReally()">Save Notes</button>
     <input type="color" id="favcolor" name="favcolor" value="#7f7f7f">
-    <button onclick="notgood()">AutoSave on/off</button> <br>
-    <button onclick="BACKUP()">backup</button>
-    <button onclick="RESTORE()">restore</button>
-    <button id="Others" onclick="ShowOthers()">Others...</button>
+    
+    <button id="Others" onclick="ShowOthers()">Others...</button> <br>
     <button id="Passord" onclick="PasswordSet()"></button>
     <button id="StopSS"></button>
-    <button id="PasswordReset" onclick="localStorage.removeItem('passwordYes'); alert('Password removed!');"></button> 
+    <button id="PasswordReset" onclick="localStorage.removeItem('passwordYes'); alert('Password removed!');"></button>  <br>
+    <button id="saveonoff"onclick="notgood()"></button>
+    <button id="backupe"onclick="BACKUP()"></button>
+    <button id="restoree"onclick="RESTORE()"></button>
     <!--THE PLACE FOR BUTTONS IS ABOVE ME!-->
     <div id="logDiv" style="position: relative; top: 0%;"></div> 
     <div class="backbackground" id="wall"></div>
@@ -81,7 +82,7 @@
     <button id="sendButton">Send</button>
     
     <script>
-        if (localStorage.getItem("passwordYes") !==null) {
+        if (localStorage.getItem("passwordYes") !==null) { //checks password string, saves local storage usage.
             userpredefinedpassword = localStorage.getItem("passwordYes")
             document.getElementById("sendButton").addEventListener("click", function() {
             const input = document.getElementById("userInput").value;
@@ -179,7 +180,7 @@
             } else {
                 logToDiv("Auto-save is off.");
                 seconds++;
-                if (seconds >= 20) {
+                if (seconds >= 10) {
                     const logDiv = document.getElementById("logDiv");
                     if (logDiv) {
                         logDiv.remove();
@@ -275,7 +276,9 @@
             document.getElementById("Passord").innerHTML = "Change password...";
             document.getElementById("PasswordReset").innerHTML = "Reset Password";
             document.getElementById("StopSS").innerHTML = "Stop Snow"; //SSStill making!! 
-
+            document.getElementById("saveonoff").innerHTML = "AutoSave on/off";
+            document.getElementById("backupe").innerHTML = "backup";
+            document.getElementById("restoree").innerHTML = "restore";
         }
         function PasswordSet(){
             result = prompt("enter password that you want: ");
