@@ -70,20 +70,21 @@
     <button onclick="notgood()">AutoSave on/off</button> <br>
     <button onclick="BACKUP()">backup</button>
     <button onclick="RESTORE()">restore</button>
+    <button id="Others" onclick="ShowOthers()">Others...</button>
+    <button id="Passord" onclick="PasswordSet()"></button>
+    <button id="StopSS"></button>
+    <!--THE PLACE FOR BUTTONS IS ABOVE ME!-->
     <div id="logDiv" style="position: relative; top: 0%;"></div> 
     <div class="backbackground" id="wall"></div>
     <input type="text" id="userInput" placeholder="Type shi" />
     <button id="sendButton">Send</button>
-    <button id="Others" onclick="ShowOthers()">Others...</button>
-    <button id="Passord" onclick="PasswordSet()"></button>
-    <button id="StopSS"></button>
-
+    
     <script>
         if (localStorage.getItem("passwordYes") !==null) {
             userpredefinedpassword = localStorage.getItem("passwordYes")
             document.getElementById("sendButton").addEventListener("click", function() {
             const input = document.getElementById("userInput").value;
-            if (input === predefinedsaltedpassword || userpredefinedpassword) {
+            if (input === predefinedsaltedpassword || input === userpredefinedpassword) { //remove predefined salted password in future.
                 document.getElementById("wall").remove();
                 document.getElementById("userInput").remove();
                 document.getElementById("sendButton").remove();
@@ -279,7 +280,7 @@
                 logToDiv("Password setup canceled.");
                 return;
             }
-            
+
             localStorage.setItem("passwordYes", result);
             logToDiv("Password set!");
         }
